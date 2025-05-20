@@ -4,6 +4,9 @@ const nextConfig = {
   eslint: {
     dirs: ['pages', 'components', 'lib'], // Run ESLint on specified directories during development
   },
+  images: {
+    domains: ['lh3.googleusercontent.com'], // Allow images from this domain
+  },
 };
 
 module.exports = nextConfig;

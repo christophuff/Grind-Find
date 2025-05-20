@@ -1,4 +1,145 @@
 body {
-  background: black;
+  background: #333333;
   color: white;
+  font-family: Arial, sans-serif;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 10px 20px;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.navbar-brand {
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo-brand {
+  color: #00FF00;
+  font-size: 40px;
+  margin-left: 5px;
+  margin-top: 10px;
+}
+
+.navbar-links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Ensure it takes the full width */
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.nav-links li {
+  margin: 0 15px;
+}
+
+.nav-link {
+  color: #1e90ff;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 10px;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #ddd;
+}
+
+/* Profile icon floating to the right */
+.profile-icon {
+  margin-left: auto; /* Push it to the right side */
+}
+
+/* Hamburger icon styles */
+.hamburger {
+  margin-bottom: 5px;
+  display: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 20; /* Ensure the hamburger icon is above the nav links */
+}
+
+.hamburger .line {
+  width: 30px; /* Set a fixed width for each line */
+  height: 4px; /* Keep the height consistent */
+  background-color: #00FF00;
+  transition: all 0.3s ease;
+}
+
+.hamburger .line.open {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger .line.open:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger .line.open:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Home Search */
+.home-search {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  margin: 20 0;
+}
+
+.home-search input {
+  width: 90%;
+  line-height: 40px;
+  border-radius: 15px;
+  background-color: #00FF00;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .nav-links {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 10; /* Nav links have a lower z-index than the hamburger */
+  }
+
+  .nav-links.active {
+    transform: translateY(0);
+  }
+
+  .nav-links li {
+    margin: 15px 0;
+  }
+
+  /* Show hamburger icon on mobile */
+  .hamburger {
+    display: flex;
+  }
+
+  /* Display sign-out button below nav links in mobile view */
+  .sign-out-button.active {
+    display: block; /* Show button when menu is open */
+  }
 }
