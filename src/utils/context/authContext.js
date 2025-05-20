@@ -4,51 +4,58 @@
 
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { firebase } from '@/utils/client';
+import { createSkaterIfNotExists } from '@/api/skaterData';
 
 const AuthContext = createContext();
-
-AuthContext.displayName = 'AuthContext'; // Context object accepts a displayName string property. React DevTools uses this string to determine what to display for the context. https://reactjs.org/docs/context.html#contextdisplayname
+AuthContext.displayName = 'AuthContext';
 
 function AuthProvider(props) {
   const [user, setUser] = useState(null);
 
-  // there are 3 states for the user:
-  // null = application initial state, not yet loaded
-  // false = user is not logged in, but the app has loaded
-  // an object/value = user is logged in
-
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((fbUser) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(async (fbUser) => {
       if (fbUser) {
+        const nameParts = fbUser.displayName?.split(' ') || [];
+        const firstName = nameParts[0] || fbUser.email?.split('@')[0] || 'User';
+        const lastName = nameParts[1] || ''; // fallback if no last name
+
+        const skater = {
+          uid: fbUser.uid,
+          firstName,
+          lastName,
+          email: fbUser.email,
+          imageUrl: fbUser.photoURL,
+        };
+
+        console.log('🚀 Sending skater:', skater);
+        await createSkaterIfNotExists(skater); // ✅ Await to avoid race conditions
+
         setUser(fbUser);
       } else {
         setUser(false);
       }
-    }); // creates a single global listener for auth state changed
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const value = useMemo(
-    // https://reactjs.org/docs/hooks-reference.html#usememo
     () => ({
       user,
       userLoading: user === null,
-      // as long as user === null, will be true
-      // As soon as the user value !== null, value will be false
     }),
     [user],
   );
 
   return <AuthContext.Provider value={value} {...props} />;
 }
-const AuthConsumer = AuthContext.Consumer;
 
 const useAuth = () => {
   const context = useContext(AuthContext);
-
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
 
-export { AuthProvider, useAuth, AuthConsumer };
+export { AuthProvider, useAuth };
