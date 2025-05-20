@@ -27,7 +27,7 @@ export default function NavBar() {
         </h1>
         <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
           <li>
-            <Link className="nav-link" href="/">
+            <Link className="nav-link" href="nearby-parks">
               Nearby Parks
             </Link>
           </li>
