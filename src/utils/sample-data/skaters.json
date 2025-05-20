@@ -1,0 +1,37 @@
+{
+    "skaters": {
+        "uid_001": {
+            "skater_id": "skater_001",
+            "uid": "uid_001",
+            "name": "John Doe",
+            "username": "johndoe123",
+            "email": "john.doe@example.com",
+            "profile_picture": "https://example.com/profile1.jpg",
+            "bio": "Skater, photographer, and street spot enthusiast.",
+            "location": "Nashville, TN",
+            "followers": ["uid_002", "uid_003"]
+        },
+        "uid_002": {
+            "skater_id": "skater_002",
+            "uid": "uid_002",
+            "name": "Jane Smith",
+            "username": "janesmith456",
+            "email": "jane.smith@example.com",
+            "profile_picture": "https://example.com/profile2.jpg",
+            "bio": "Lover of ramps and bowls, chasing the next trick.",
+            "location": "Los Angeles, CA",
+            "followers": ["uid_001"]
+        },
+        "uid_003": {
+            "skater_id": "skater_003",
+            "uid": "uid_003",
+            "name": "Chris King",
+            "username": "chrisking789",
+            "email": "chris.king@example.com",
+            "profile_picture": "https://example.com/profile3.jpg",
+            "bio": "Professional skater and sponsor for SkateCo.",
+            "location": "Chicago, IL",
+            "followers": ["uid_001"]
+        }
+    }
+}
