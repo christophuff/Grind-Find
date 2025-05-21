@@ -4,7 +4,7 @@ const endpoint = clientCredentials.databaseURL;
 
 const getSkaterByUid = (uid) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/skaters/skaters/${uid}.json`, {
+    fetch(`${endpoint}/skaters/skaters.json?orderBy="uid"&equalTo="${uid}"`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
