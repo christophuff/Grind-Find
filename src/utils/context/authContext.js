@@ -30,11 +30,13 @@ function AuthProvider(props) {
           let firebaseKey;
 
           if (existingData) {
-            // If the skater already exists, use the existing data's `skater_id`
-            firebaseKey = existingData.skater_id;
-          } else {
-            // If skater is newly created, get the auto-generated Firebase document key
-            firebaseKey = existingData.firebaseKey || existingData.key;
+            // Check if the skater exists or was just created
+            firebaseKey = existingData.firebaseKey || existingData.key; // Get Firebase document key (auto-generated)
+          }
+
+          if (!firebaseKey) {
+            console.error('Error: No firebaseKey found');
+            return;
           }
 
           // Step 2: After getting the firebaseKey, update skater document with the `skater_id` field

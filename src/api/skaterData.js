@@ -71,19 +71,24 @@ const updateSkater = (firebaseKey, payload) =>
 
 const createSkaterIfNotExists = (skater) =>
   new Promise((resolve, reject) => {
-    getSkaterByUid(skater.uid)
+    getSkaterByUid(skater.uid) // Check by Firebase UID
       .then((existing) => {
         console.log('Existing skater found:', existing);
 
         if (!existing || Object.keys(existing).length === 0) {
-          // No volunteer found, create one
-          createSkater(skater).then(resolve).catch(reject);
+          // No skater found, create one
+          createSkater(skater)
+            .then((newData) => {
+              // Ensure newData contains the firebaseKey
+              resolve(newData); // Return the new skater data (including firebaseKey)
+            })
+            .catch(reject); // Reject if creation fails
         } else {
-          // Already exists
-          resolve();
+          // Skater already exists
+          resolve(existing); // Return existing data (it will contain the firebaseKey)
         }
       })
-      .catch(reject);
+      .catch(reject); // Reject if there's an error with the `getSkaterByUid` function
   });
 
 export { getSkaterByUid, createSkater, updateSkater, createSkaterIfNotExists };
