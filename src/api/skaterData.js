@@ -4,7 +4,7 @@ const endpoint = clientCredentials.databaseURL;
 
 const getSkaterByUid = (uid) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/skaters/skaters.json?orderBy="uid"&equalTo="${uid}"`, {
+    fetch(`${endpoint}/skaters.json?orderBy="uid"&equalTo="${uid}"`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ const getSkaterByUid = (uid) =>
 
 const createSkater = (payload) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/skaters/skaters.json`, {
+    fetch(`${endpoint}/skaters.json`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const createSkater = (payload) =>
         const skaterWithKey = { ...payload, skater_id: firebaseKey }; // Add the Firebase key as `skater_id`
 
         // Now update the skater document to include the `skater_id`
-        fetch(`${endpoint}/skaters/skaters/${firebaseKey}.json`, {
+        fetch(`${endpoint}/skaters/${firebaseKey}.json`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ const createSkater = (payload) =>
 
 const updateSkater = (firebaseKey, payload) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/skaters/skaters/${firebaseKey}.json`, {
+    fetch(`${endpoint}/skaters/${firebaseKey}.json`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

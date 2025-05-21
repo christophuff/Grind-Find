@@ -1,6 +1,5 @@
 {
-    "skaters": {
-        "uid_001": {
+        "skater_001": {
             "skater_id": "skater_001",
             "uid": "uid_001",
             "name": "John Doe",
@@ -11,7 +10,7 @@
             "location": "Nashville, TN",
             "followers": ["uid_002", "uid_003"]
         },
-        "uid_002": {
+        "skater_002": {
             "skater_id": "skater_002",
             "uid": "uid_002",
             "name": "Jane Smith",
@@ -22,7 +21,7 @@
             "location": "Los Angeles, CA",
             "followers": ["uid_001"]
         },
-        "uid_003": {
+        "skater_003": {
             "skater_id": "skater_003",
             "uid": "uid_003",
             "name": "Chris King",
@@ -34,4 +33,3 @@
             "followers": ["uid_001"]
         }
     }
-}

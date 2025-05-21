@@ -1,5 +1,4 @@
 {
-    "parks": {
         "park_001": {
             "park_id": "park_001",
             "name": "Central Park Skatepark",
@@ -28,4 +27,3 @@
             "image_url": "https://example.com/chicago-skatepark.jpg"
         }
     }
-}

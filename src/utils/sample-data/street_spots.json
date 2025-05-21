@@ -1,5 +1,4 @@
 {
-    "street_spots": {
         "spot_001": {
             "spot_id": "spot_001",
             "name": "Shred Alley",
@@ -34,4 +33,3 @@
             "images": ["https://example.com/spot3.jpg"]
         }
     }
-}

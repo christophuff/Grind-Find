@@ -26,20 +26,28 @@ function AuthProvider(props) {
         console.log('🚀 Sending skater:', skater);
 
         // Step 1: Ensure the skater is created (if not exists)
-        await createSkaterIfNotExists(skater).then((data) => {
-          // Now we are sure the skater is created, and `data` contains the correct Firebase key
-          const {firebaseKey} = data; // Get Firebase document key (auto-generated)
+        await createSkaterIfNotExists(skater).then((existingData) => {
+          let firebaseKey;
 
-          const skaterKey = { ...skater, skater_id: firebaseKey }; // Set skater_id to Firebase key
+          if (existingData) {
+            // If the skater already exists, use the existing data's `skater_id`
+            firebaseKey = existingData.skater_id;
+          } else {
+            // If skater is newly created, get the auto-generated Firebase document key
+            firebaseKey = existingData.firebaseKey || existingData.key;
+          }
 
-          // Step 2: Update the skater document with the `skater_id` field
+          // Step 2: After getting the firebaseKey, update skater document with the `skater_id` field
+          const skaterKey = { ...skater, skater_id: firebaseKey };
+
+          // Update the skater document with the `skater_id` field
           updateSkater(firebaseKey, skaterKey);
         });
 
-        // Step 3: Set the `user` context only after skater creation is complete
-        setUser({ ...fbUser, skater_id: fbUser.uid }); // Store `skater_id` in context
+        // Step 3: After skater creation and update, set the `user` context with `skater_id`
+        setUser({ ...fbUser, skater_id: fbUser.uid }); // Store `skater_id` in context (using Firebase UID)
       } else {
-        setUser(false);
+        setUser(false); // No user logged in
       }
     });
 
