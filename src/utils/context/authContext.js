@@ -15,16 +15,14 @@ function AuthProvider(props) {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (fbUser) => {
       if (fbUser) {
-        const nameParts = fbUser.displayName?.split(' ') || [];
-        const firstName = nameParts[0] || fbUser.email?.split('@')[0] || 'User';
-        const lastName = nameParts[1] || ''; // fallback if no last name
-
         const skater = {
           uid: fbUser.uid,
-          firstName,
-          lastName,
+          name: fbUser.displayName,
           email: fbUser.email,
-          imageUrl: fbUser.photoURL,
+          profile_picture: fbUser.photoURL,
+          username: '',
+          location: '',
+          followers: [],
         };
 
         console.log('🚀 Sending skater:', skater);
