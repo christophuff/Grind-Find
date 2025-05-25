@@ -1,61 +1,104 @@
-# NextJS with Firebase Auth App Router Template
+# **GrindFind MVP README**
 
-[See Live Demo of this Template](https://drt-next-js-template-app-router.netlify.app/)
+## **Project Overview**
 
-## Topics
-- [Get Started](#get-started)
-- [Starting the Project](#starting-the-project)
-- [Deploying on Netlify](#deploying-on-netlify)
-___
-## Getting Started
-### Use Template
-#### 1. To get started, click the GREEN "Use this Template" button at the top of the repo
-<img width="915" alt="Screen Shot 2022-07-06 at 12 54 01 PM" src="https://user-images.githubusercontent.com/29741570/177612998-4aac9237-5a1e-4f13-8ae0-468587521564.png">
+**GrindFind** is a platform designed for skateboarders to find, upload, and share street spots. It allows users to create profiles and contribute their own spots for others to enjoy. This MVP aims to provide basic functionality to allow users to interact with the platform and contribute content.
 
-#### 2. Make sure YOUR github account is selected in the dropdown and name your project
-<img width="763" alt="Screen Shot 2022-07-06 at 12 54 48 PM" src="https://user-images.githubusercontent.com/29741570/177613126-dd38f678-7553-4f27-8a4a-75680f14d71e.png">
+## **MVP Goals**
 
-#### 3. Clone your new repo to your local machine
-#### 4. Go to the **NEXT** section
+### **Core Features:**
 
-## Starting the Project
-1. Create a Firebase project and set up authentication. Use [these videos](https://vimeo.com/showcase/codetracker-firebase) as a refresher if needed.
-1. Create a `.env` file at the root of the project
-1. Copy/Paste the contents of the `.env.sample` file to your newly created `.env` file.
-1. Copy over all of your Firebase values into the `.env` file.
-1. Open the `package.json` file and change the `name` property to the name of your application, and `author` to  your name.
-1. From your command line, be in the root directory and run `npm install` OR `npm i` for short.
-1. Next, run `npm run prepare`. This command sets up husky to track eslint errors on commit that will make your deploy fail on Netlify.
-1. Run `npx eslint . --ext .js,.jsx`
-1. To start your application, run `npm run dev`. THIS IS THE COMMAND YOU WILL USE TO RUN YOUR DEVELOPMENT SERVER FROM NOW ON.
-1. Open [http://localhost:3000](http://localhost:3000) with your browser.
+1. **User Authentication:**
+   - Implement user authentication using Firebase (or another method).
+   - Allow users to login and be created as a skater in the database. 
 
-### If you see this, you are set to go!
-<img width="450" alt="Screen Shot 2022-07-06 at 1 07 27 PM" src="https://github.com/user-attachments/assets/deae25f0-01d5-44b4-be60-7297b0f6f0ef">
+2. **Street Spot Create Read Update and Delete:**
+   - Users can upload street spots, including information such as:
+     - Spot name
+     - Address
+     - Description
+     - Images (multiple image upload functionality)
+   - Images are uploaded to Firebase Storage, and URLs are saved in the database.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+3. **Spot Image Carousel:**
+   - On the spot detail page, users can view a carousel of images uploaded for the spot.
+   - Users can click on thumbnail images to update the carousel image.
 
-**NOTES:** 
-- If you see the following error, you did not follow all the setup steps correctly and failed to add your Firebase creds. Go back and do that NOW.
+4. **Responsive Design:**
+   - Ensure that the site is mobile-friendly and adjusts its layout according to the screen size (images, spot details, and carousels should all be responsive).
 
-<img width="1043" alt="Screen Shot 2022-07-06 at 11 18 45 AM" src="https://user-images.githubusercontent.com/29741570/177612501-c2628f18-4bbd-4de9-aae6-27ffba1172d6.png">
+5. **Basic User Interface:**
+   - A simple and intuitive UI for users to interact with, including forms for uploading spots, viewing spot details, and navigating between pages.
+   - Basic components like buttons, forms, image previews, and carousels are styled and functional.
 
-### Deploying on Netlify
-Netlify will automatically detect your project and prepopulate the settings, but should something go wrong and it does not, here are the commands:
+---
 
-- Build Command: `npm run build`
-- Publish directory: `.next`
+## **Future Stretch Goals (Post-MVP):**
 
-#### Additional Steps to Take on Netlify
-- Add Environmental Variables
-    - Any Enviromental variables you are using in your `.env` file should be added to Netlify. 
-        - Go to Site settings > Build & deploy > Environment > Environment variables and the keys and values there if you did not add them when you were deploying your site
+1. **Geolocation Integration:**
+   - Use a geolocation API to show spots on a map.
+   - Enable users to search for nearby spots based on their location.
 
-- Update Firebase URL Settings
-    - In Firebase under Authentication select sign in methods, scroll to Authorized domains. Add your Netlify URL.
-        
-## Learn More about Next.js
-To learn more about Next.js, take a look at the following resources:
+2. **Spot Search and Display:**
+   - Allow users to search for street spots by location.
+   - Display a list of spots with thumbnails and basic details.
+   - Users can click on a spot to view detailed information, including images.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **User Ratings:**
+   - Allow users to rate spot.
+   - Implement a 5-star rating system or a thumbs-up/thumbs-down system.
+
+4. **Profile Management:**
+   - Users can view and edit their profile information.
+   - Users can see the spots they have uploaded.
+
+5. **Social Features:**
+   - Allow users to follow other users and view their uploaded spots.
+   - Implement a feed to show recently uploaded spots by users you follow.
+
+6. **Spot Categories or Tags:**
+   - Add the ability for users to categorize spots by type (e.g., street, park, bowl) or add custom tags.
+   - Enable filtering by category or tag.
+
+---
+
+## **Technologies Used**
+
+- **Frontend**:
+  - React
+  - Next.js
+  - React Slick (for the carousel)
+  - Firebase (for authentication, data storage, and image uploads)
+
+- **Backend** (if applicable):
+  - Firebase Realtime Database (or Firestore)
+  - Firebase Storage (for image storage)
+
+---
+
+## **Installation Instructions**
+
+### **1. Clone the Repository:**
+ - bash
+ --git clone https://github.com/christophuff/grind-find.git
+
+### **2. Dependencies:**
+ - npm install 
+ - npm run prepare
+
+### **3. Set Up Firebase:**
+
+**Go to Firebase Console.**
+**Create a new Firebase project.**
+**Set up Firebase Authentication, Firestore (or Realtime Database), and Firebase Storage.**
+**Add your Firebase credentials to the .env.local file:**
+
+ - NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+ - NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+ - NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+ - NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+ - NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+ - NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+
+ ### **4. Start the Development Server:**
+ - npm run dev
