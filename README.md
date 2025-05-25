@@ -89,8 +89,11 @@
 ### **3. Set Up Firebase:**
 
 **Go to Firebase Console.**
+
 **Create a new Firebase project.**
+
 **Set up Firebase Authentication, Firestore (or Realtime Database), and Firebase Storage.**
+
 **Add your Firebase credentials to the .env.local file:**
 
  - NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
