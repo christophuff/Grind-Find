@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Slider from 'react-slick';
 import viewSpotDetails from '@/api/mergedData'; // Correct import for merged data
-import Image from 'next/image'; // Import Image component for optimization
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css'; // Importing the slick-carousel styles
 
@@ -43,9 +42,9 @@ export default function ViewSpot({ params }) {
         <Slider {...settings}>
           {spotDetails.images.map((image, index) => (
             <div key={image}>
-              <Image
+              <img
                 src={image}
-                alt={`Spot image ${index + 1}`}
+                alt={`Spot ${index + 1}`}
                 className="spot-image"
                 width={500} // Provide width and height for Next.js optimization
                 height={300}
@@ -57,10 +56,11 @@ export default function ViewSpot({ params }) {
         {/* Image Previews Below Carousel */}
         <div className="image-previews">
           {spotDetails.images.map((image, index) => (
-            <Image
+            <button
+              type="button"
               key={image}
               src={image}
-              alt={`Preview of spot image ${index + 1}`}
+              alt={`Preview of spot ${index + 1}`}
               className={`image-preview ${index === currentImageIndex ? 'active' : ''}`}
               onClick={() => handleImageClick(index)}
               onKeyDown={(e) => {

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import firebase from 'firebase';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useAuth } from '../../utils/context/authContext';
@@ -134,7 +133,7 @@ function StreetSpotForm({ obj = initialState }) {
       {/* IMAGE PREVIEW */}
       <div className="image-previews">
         {formInput.images && formInput.images.length > 0 ? (
-          formInput.images.map((image, index) => <Image key={image} src={image} alt={`Preview ${index}`} className="image-preview" />)
+          formInput.images.map((image, index) => <img key={image} src={image} alt={`Preview ${index}`} className="image-preview" />)
         ) : (
           <p>No images selected</p> // Or simply leave it empty
         )}
