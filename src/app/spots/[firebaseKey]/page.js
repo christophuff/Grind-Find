@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Image from 'next/image';
 import Slider from 'react-slick';
 import viewSpotDetails from '@/api/mergedData'; // Correct import for merged data
 import 'slick-carousel/slick/slick.css';
@@ -56,8 +57,7 @@ export default function ViewSpot({ params }) {
         {/* Image Previews Below Carousel */}
         <div className="image-previews">
           {spotDetails.images.map((image, index) => (
-            <button
-              type="button"
+            <Image
               key={image}
               src={image}
               alt={`Preview of spot ${index + 1}`}
@@ -69,6 +69,8 @@ export default function ViewSpot({ params }) {
                 }
               }}
               tabIndex={0}
+              width={80}
+              height={80}
             />
           ))}
         </div>
