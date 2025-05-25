@@ -1,4 +1,4 @@
-# **GrindFind MVP README**
+# **GrindFind**
 
 ## **Project Overview**
 
