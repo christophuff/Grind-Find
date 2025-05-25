@@ -2,6 +2,32 @@ import { clientCredentials } from '../utils/client';
 
 const endpoint = clientCredentials.databaseURL;
 
+const getSkaters = () =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/skaters.json`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => resolve(Object.values(data)))
+      .catch(reject);
+  });
+
+const getSingleSkater = (firebaseKey) =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/skaters/${firebaseKey}.json`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => resolve(data))
+      .catch(reject);
+  });
+
 const getSkaterByUid = (uid) =>
   new Promise((resolve, reject) => {
     fetch(`${endpoint}/skaters.json?orderBy="uid"&equalTo="${uid}"`, {
@@ -22,6 +48,21 @@ const getSkaterByUid = (uid) =>
         }
       })
       .catch(reject);
+  });
+
+// In your StreetSpotForm component or a utility file
+const getSkaterId = (uid) =>
+  new Promise((resolve, reject) => {
+    getSkaterByUid(uid)
+      .then((skaterList) => {
+        if (skaterList && skaterList.length > 0) {
+          // Assuming that skaterList is returned as an array and each skater has a 'firebaseKey' and 'skater_id'
+          resolve(skaterList[0].firebaseKey); // Or skaterList[0].skater_id, depending on your structure
+        } else {
+          reject(new Error('No skater found for the given uid'));
+        }
+      })
+      .catch((error) => reject(error)); // Handle any errors that occur during the fetch
   });
 
 const createSkater = (payload) =>
@@ -91,4 +132,4 @@ const createSkaterIfNotExists = (skater) =>
       .catch(reject); // Reject if there's an error with the `getSkaterByUid` function
   });
 
-export { getSkaterByUid, createSkater, updateSkater, createSkaterIfNotExists };
+export { getSkaters, getSkaterByUid, getSkaterId, getSingleSkater, createSkater, updateSkater, createSkaterIfNotExists };

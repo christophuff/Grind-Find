@@ -10,6 +10,10 @@ export default function NavBar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false); // Close the menu
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       toggleMenu(); // Toggle the menu when the Enter or Space key is pressed
@@ -27,12 +31,12 @@ export default function NavBar() {
         </h1>
         <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
           <li>
-            <Link className="nav-link" href="nearby-parks">
+            <Link className="nav-link" href="nearby-parks" onClick={closeMenu}>
               Nearby Parks
             </Link>
           </li>
           <li>
-            <Link className="nav-link" href="/my-uploads">
+            <Link className="nav-link" href="/my-uploads" onClick={closeMenu}>
               My Uploads
             </Link>
           </li>
