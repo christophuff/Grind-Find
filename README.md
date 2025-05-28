@@ -1,8 +1,16 @@
-# **GrindFind MVP README**
+# **GrindFind**
 
 ## **Project Overview**
 
 **GrindFind** is a platform designed for skateboarders to find, upload, and share street spots. It allows users to create profiles and contribute their own spots for others to enjoy. This MVP aims to provide basic functionality to allow users to interact with the platform and contribute content.
+
+### **Links**:
+
+- **[Repo Link](https://github.com/christophuff/grind-find)**
+- **[Loom Video Walkthrough](https://www.loom.com/share/44eea76438284dd3b8c50c69e8cbb660)**
+- **[Wireframes](https://drive.google.com/file/d/1n7FTBLBDJ3BkBjUZRYxP1aYCmTm_JGmr/view?usp=drive_link)**
+- **[Project Board](https://github.com/users/christophuff/projects/2/views/1)**
+- **[ERD](https://drawsql.app/teams/nss-52/diagrams/grindfind)**
 
 ## **MVP Goals**
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import Image from 'next/image';
 import { signIn } from '../utils/auth';
 
 function Signin() {
@@ -13,11 +13,41 @@ function Signin() {
         margin: '0 auto',
       }}
     >
-      <h1>Hi there!</h1>
-      <p>Click the button below to login!</p>
-      <Button type="button" size="lg" className="copy-btn" onClick={signIn}>
+      <Image
+        src="/images/grind-find.png"
+        className="m-auto"
+        width={200}
+        height={240}
+        style={{
+          margin: '-100px',
+        }}
+      />
+      <h1
+        style={{
+          color: '#00ff00',
+        }}
+      >
+        Welcome to GrindFind!
+      </h1>
+      <p
+        style={{
+          color: '#1e90ff',
+        }}
+      >
+        Sign in to get started!
+      </p>
+      <button
+        type="button"
+        className="pink-btn"
+        onClick={signIn}
+        style={{
+          width: '250px',
+          padding: '10px 20px',
+          margin: '0 auto',
+        }}
+      >
         Sign In
-      </Button>
+      </button>
     </div>
   );
 }

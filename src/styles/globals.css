@@ -182,6 +182,11 @@ body {
   margin: 5px 0;
   border: none;
   border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.pink-btn:hover {
+  background: #8f0047;
 }
 
 .red-btn {
@@ -192,6 +197,11 @@ body {
   margin: 5px 0;
   border: none;
   border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.red-btn:hover {
+  background: rgb(129, 0, 0);
 }
 
 /* FORM CSS */
