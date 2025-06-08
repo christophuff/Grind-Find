@@ -5,8 +5,8 @@ import firebase from 'firebase';
 import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 import { useAuth } from '../../utils/context/authContext';
-import { getSkaters } from '../../api/skaterData'; // Fetching skaters
-import { createStreetSpot, updateStreetSpot } from '../../api/streetSpotData'; // Adjust API methods
+import { getSkaters } from '../../api/skaterData';
+import { createStreetSpot, updateStreetSpot } from '../../api/streetSpotData';
 
 const initialState = {
   name: '',
@@ -14,34 +14,35 @@ const initialState = {
   address: '',
   skater_id: '',
   uid: '',
-  images: [], // Store an array of image URLs
+  images: [],
+  latitude: '',
+  longitude: '',
+  security_level: '', // NEW FIELD
 };
 
 function StreetSpotForm({ obj = initialState }) {
   const [formInput, setFormInput] = useState(obj);
-  const [skater, setSkaters] = useState([]); // Store the list of skaters here
+  const [skater, setSkaters] = useState([]);
+  const [isGeocodingComplete, setIsGeocodingComplete] = useState(false);
   const router = useRouter();
-  const { user } = useAuth(); // Get the user data (uid)
+  const { user } = useAuth();
 
   useEffect(() => {
     if (user) {
-      // Fetch skaters when user is available
       getSkaters(user.uid)
         .then((skaterList) => {
           setSkaters(skaterList);
 
-          // If editing an existing spot, set the form data
           if (obj.firebaseKey) {
             setFormInput({
               ...obj,
-              skater_id: obj.skater_id || '', // Ensure skater_id is passed correctly
-              uid: user.uid, // Set the user's UID
+              skater_id: obj.skater_id || '',
+              uid: user.uid,
             });
           } else {
-            // If creating a new spot, set the UID in the form
             setFormInput((prevInput) => ({
               ...prevInput,
-              uid: user.uid, // Add user.uid to the form data
+              uid: user.uid,
             }));
           }
         })
@@ -57,26 +58,19 @@ function StreetSpotForm({ obj = initialState }) {
     }));
   };
 
-  // Handle image file input
   const handleFileChange = (e) => {
-    const files = Array.from(e.target.files); // Convert file list to array
+    const files = Array.from(e.target.files);
     const uploadPromises = files.map((file) => {
-      // Generate a unique file name
       const fileName = `${new Date().getTime()}-${file.name}`;
-
-      // Create a reference to Firebase Storage
       const storageRef = firebase.storage().ref(`streetSpotImages/${fileName}`);
-
-      // Upload the file to Firebase Storage
       return storageRef.put(file).then(() => storageRef.getDownloadURL());
     });
 
-    // Wait for all file uploads to complete and get the URLs
     Promise.all(uploadPromises)
       .then((urls) => {
         setFormInput((prevState) => ({
           ...prevState,
-          images: urls, // Store the URLs in the state
+          images: urls,
         }));
       })
       .catch((error) => {
@@ -84,19 +78,52 @@ function StreetSpotForm({ obj = initialState }) {
       });
   };
 
-  const handleSubmit = (e) => {
+  const handleLocationSubmit = (address) => {
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
+
+    fetch(geocodeUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.results && data.results[0]) {
+          const newLocation = data.results[0].geometry.location;
+          setFormInput({
+            ...formInput,
+            latitude: newLocation.lat,
+            longitude: newLocation.lng,
+          });
+          setIsGeocodingComplete(true);
+        } else {
+          alert('Location not found.');
+        }
+      })
+      .catch((error) => {
+        console.error('Error geocoding location:', error);
+        alert('Error geocoding location');
+      });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isGeocodingComplete) {
+      handleLocationSubmit(formInput.address);
+    }
+
+    if (!isGeocodingComplete) {
+      alert('Geocoding is not completed yet. Please wait a moment and try again!');
+      return;
+    }
 
     const payload = {
       ...formInput,
-      created_by: formInput.skater_id, // Use skater_id in the created_by field
-      address: formInput.address, // Store the address for the spot
-      images: formInput.images, // Store the uploaded image URLs
+      created_by: formInput.skater_id,
+      address: formInput.address,
+      images: formInput.images,
     };
 
-    // Check if we are updating an existing spot or creating a new one
     if (obj.firebaseKey) {
-      updateStreetSpot(payload).then(() => router.push(`/my-uploads`));
+      updateStreetSpot(payload).then(() => router.push('/my-uploads'));
     } else {
       createStreetSpot(payload).then(({ name }) => {
         const patchPayload = { firebaseKey: name };
@@ -117,27 +144,14 @@ function StreetSpotForm({ obj = initialState }) {
       </label>
       <input type="text" id="name" name="name" placeholder="Enter a spot name" value={formInput.name} onChange={handleChange} required className="form-input" />
 
-      {/* IMAGE UPLOAD INPUT */}
+      {/* IMAGE UPLOAD */}
       <label htmlFor="images" className="form-label">
         Spot Images
       </label>
-      <input
-        type="file"
-        id="images"
-        name="images"
-        multiple // Allow multiple file uploads
-        onChange={handleFileChange}
-        className="form-input"
-      />
+      <input type="file" id="images" name="images" multiple onChange={handleFileChange} className="form-input" />
 
-      {/* IMAGE PREVIEW */}
-      <div className="image-previews">
-        {formInput.images && formInput.images.length > 0 ? (
-          formInput.images.map((image, index) => <img key={image} src={image} alt={`Preview ${index}`} className="image-preview" />)
-        ) : (
-          <p>No images selected</p> // Or simply leave it empty
-        )}
-      </div>
+      {/* IMAGE PREVIEWS */}
+      <div className="image-previews">{formInput.images && formInput.images.length > 0 ? formInput.images.map((image, index) => <img key={image} src={image} alt={`Preview ${index}`} className="image-preview" />) : <p>No images selected</p>}</div>
 
       {/* ADDRESS INPUT */}
       <label htmlFor="address" className="form-label">
@@ -166,6 +180,17 @@ function StreetSpotForm({ obj = initialState }) {
       </label>
       <textarea id="description" name="description" placeholder="Description" value={formInput.description} onChange={handleChange} required className="form-textarea" />
 
+      {/* SECURITY LEVEL DROPDOWN */}
+      <label htmlFor="security_level" className="form-label">
+        Security Level
+      </label>
+      <select id="security_level" name="security_level" value={formInput.security_level} onChange={handleChange} required className="form-select">
+        <option value="">Select security level</option>
+        <option value="High">High</option>
+        <option value="Moderate">Moderate</option>
+        <option value="Low">Low</option>
+      </select>
+
       {/* SUBMIT BUTTON */}
       <button type="submit" className="form-button">
         {obj.firebaseKey ? 'Update' : 'Create'} Street Spot
@@ -177,12 +202,15 @@ function StreetSpotForm({ obj = initialState }) {
 StreetSpotForm.propTypes = {
   obj: PropTypes.shape({
     description: PropTypes.string,
-    images: PropTypes.arrayOf(PropTypes.string), // Expecting an array of image URLs
-    address: PropTypes.string, // Changed from location to address
+    images: PropTypes.arrayOf(PropTypes.string),
+    address: PropTypes.string,
     name: PropTypes.string,
     skater_id: PropTypes.string,
     firebaseKey: PropTypes.string,
     uid: PropTypes.string,
+    latitude: PropTypes.number,
+    longitude: PropTypes.number,
+    security_level: PropTypes.string, // NEW PROP TYPE
   }),
 };
 

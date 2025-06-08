@@ -1,9 +1,9 @@
 import { clientCredentials } from '../utils/client';
-// API CALLS FOR BOOKS
+import haversine from '../utils/haversine';
 
 const endpoint = clientCredentials.databaseURL;
 
-const getStreetSpots = () =>
+const getStreetSpots = (lat, lng, radius = 10) =>
   new Promise((resolve, reject) => {
     fetch(`${endpoint}/street_spots.json`, {
       method: 'GET',
@@ -12,7 +12,14 @@ const getStreetSpots = () =>
       },
     })
       .then((response) => response.json())
-      .then((data) => resolve(Object.values(data)))
+      .then((data) => {
+        // Filter the data based on proximity to the given lat/lng
+        const filteredSpots = Object.values(data).filter((spot) => {
+          const distance = haversine(lat, lng, spot.latitude, spot.longitude);
+          return distance <= radius; // Only include spots within the specified radius
+        });
+        resolve(filteredSpots); // Return the filtered street spots
+      })
       .catch(reject);
   });
 

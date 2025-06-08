@@ -14,7 +14,7 @@ function StreetSpotCard({ streetSpotObj, onUpdate }) {
   };
 
   return (
-    <div className="spot-card-container">
+    <div className="my-upload-card-container">
       <div className="spot-card-image-container">
         <Image className="spot-card-image" src={streetSpotObj.images && streetSpotObj.images[0] ? streetSpotObj.images[0] : '/public/images/default.png'} width={130} height={130} alt={streetSpotObj.description} />
       </div>

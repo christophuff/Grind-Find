@@ -7,8 +7,10 @@ const nextConfig = {
   images: {
     domains: [
       // allow images from these domains
-      'lh3.googleusercontent.com',
       'firebasestorage.googleapis.com',
+      'lh3.googleusercontent.com',
+      'maps.googleapis.com',
+      'example.com',
     ],
   },
 };

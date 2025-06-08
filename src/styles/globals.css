@@ -13,7 +13,6 @@ body {
   margin: 0 auto;
   width: 90%;
 }
-
 .navbar-brand {
   color: white;
   font-size: 24px;
@@ -21,31 +20,26 @@ body {
   display: flex;
   align-items: center;
 }
-
 .logo-brand {
   color: #00FF00;
   font-size: 40px;
   margin-left: 5px;
   margin-top: 10px;
 }
-
 .navbar-links {
   display: flex;
   justify-content: space-between;
   width: 100%; /* Ensure it takes the full width */
 }
-
 .nav-links {
   list-style: none;
   display: flex;
   align-items: center;
   margin: 0;
 }
-
 .nav-links li {
   margin: 0 15px;
 }
-
 .nav-link {
   color: #1e90ff;
   text-decoration: none;
@@ -53,16 +47,13 @@ body {
   padding: 10px;
   transition: color 0.3s;
 }
-
 .nav-link:hover {
   color: #ddd;
 }
-
 /* Profile icon floating to the right */
 .profile-icon {
   margin-left: auto; /* Push it to the right side */
 }
-
 /* Hamburger icon styles */
 .hamburger {
   margin-bottom: 5px;
@@ -72,25 +63,23 @@ body {
   gap: 5px;
   z-index: 20; /* Ensure the hamburger icon is above the nav links */
 }
-
 .hamburger .line {
   width: 30px; /* Set a fixed width for each line */
   height: 4px; /* Keep the height consistent */
   background-color: #00FF00;
   transition: all 0.3s ease;
 }
-
 .hamburger .line.open {
   transform: translateY(9px) rotate(45deg);
 }
-
 .hamburger .line.open:nth-child(2) {
   opacity: 0;
 }
-
 .hamburger .line.open:nth-child(3) {
   transform: translateY(-9px) rotate(-45deg);
 }
+
+
 
 /* Home Search */
 .search-bar {
@@ -100,7 +89,6 @@ body {
   width: 90%;
   margin: 20px auto;
 }
-
 .search-input {
   width: 100%; /* Make the input take up 100% of the container's width */
   padding: 10px 20px 10px 50px; /* Add space for the icon inside the input */
@@ -110,7 +98,6 @@ body {
   border: none;
   position: relative;
 }
-
 .search-button {
   position: absolute;
   left: 6%; /* Position the magnifying glass inside the input */
@@ -119,60 +106,175 @@ body {
   cursor: pointer;
   z-index: 1;
 }
-
 .search-input::placeholder {
   color: #333;
 }
-
 /* Optional: style the button's hover effect */
 .search-button:hover {
   color: #333;
 }
-
 .search-input:focus {
   border-color: #4CAF50; /* Green border when focused */
   outline: none; /* Removes the default focus outline */
 }
 
+
+.main-page {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  width: 90%;
+  margin: 25px auto 0px auto;
+  padding: 5px;
+  flex-wrap: wrap; /* To allow content wrapping on smaller screens */
+}
+.map {
+  flex: 1;
+  height: 100%;
+  border-radius: 10px;
+}
+.nearby-container {
+  flex: 0 0 30%;
+  height: 70vh; 
+  overflow-y: auto;
+  scrollbar-color: #00ff00 #000033;
+  scrollbar-width: thin;
+  padding: 10px;
+  background-color: #000033;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+.nearby-container h3 {
+  margin: 10px auto;
+  color: #00FF00;
+}
+
+
+
 /* UPLOADS PAGE */
 .uploads-page {
   text-align: center;
 }
-
 .card-container {
-  margin-top: 20px;
+  margin: 20px auto;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 15px;
 }
-
+.card-container a {
+  text-decoration: none;
+}
 .spot-card-container {
   display: flex;
   align-items: center;
-  width: 400px;
+  width: 380px;
   height: 150px;
-  background: #00FF00;
   padding: 10px;
   border-radius: 5px;
+  transition: transform 0.2s ease-in-out;
 }
-
+.spot-card-container.odd {
+  background: #00FF00;
+}
+.spot-card-container.even {
+  background: #FF007F;
+}
+.spot-card-container:hover,
+.spot-card-container:focus {
+  transform: scale(1.05);
+}
+.street-spot-card-container {
+  display: flex;
+  align-items: center;
+  width: 400px;
+  height: 150px;  
+  padding: 10px;
+  border-radius: 5px;
+  transition: transform 0.2s ease-in-out;
+}
+.street-spot-card-container.even {
+  background: #1e90ff;
+}
+.street-spot-card-container.odd {
+  background: #00FF00;
+}
+.street-spot-card-container:hover,
+.street-spot-card-container:focus {
+  transform: scale(1.05);
+}
+.my-upload-card-container {
+  display: flex;
+  align-items: center;
+  background: #00FF00;
+  width: 400px;
+  height: 150px;  
+  padding: 10px;
+  border-radius: 5px;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+.my-upload-card-container:nth-child(even) {
+  background: #1e90ff;
+}
+.my-upload-card-container:hover,
+.my-upload-card-container:focus {
+  transform: scale(1.05);
+}
 .spot-card-image {
   border-radius: 5px;
 }
-
 .spot-location-container {
   padding: 0 10px;
   color: #333;
 }
-
 .spot-location-container h3 {
   font-size: 16px;
 }
-
 .spot-location-container p {
   font-size: 10px;
 }
+.star-rating {
+  font-size: 24px;
+}
+.star {
+  color: #ccc;
+}
+.star.filled {
+  color: #ffc107; /* You can change this to any color for filled stars */
+}
+.interactive-star-rating {
+  display: flex;
+  gap: 6px;
+  font-size: 28px;
+  user-select: none;
+}
+.interactive-star-rating .star {
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.2s;
+}
+.interactive-star-rating .star.filled {
+  color: #ffc107;
+}
+.security-badge {
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  margin-left: 4px;
+}
+.security-badge.high {
+  background-color: #d32f2f; /* Red */
+}
+.security-badge.moderate {
+  background-color: #f9a825; /* Yellow */
+  color: black;
+}
+.security-badge.low {
+  background-color: #388e3c; /* Green */
+}
+
 
 .pink-btn {
   background: #FF007F;
@@ -294,21 +396,24 @@ body {
   padding: 20px;
   flex-wrap: wrap;
 }
+.slick-slide > div {
+  height: 400px !important;
+}
 .image-section {
   flex: 1 1 45%; /* On larger screens, take 45% of the width */
-  max-width: 500px; /* Prevents the images section from becoming too wide */
+  max-width: 450px; /* Prevents the images section from becoming too wide */
+  height: auto;
 }
 .spot-image {
   width: 100%;
   height: auto;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .image-previews {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
-  justify-content: flex-start;
+  margin-top: 20px;
+  justify-content: center;
   flex-wrap: wrap;
 }
 .image-preview {
@@ -381,6 +486,22 @@ body {
   /* Display sign-out button below nav links in mobile view */
   .sign-out-button.active {
     display: block; /* Show button when menu is open */
+  }
+
+  .main-page {
+    flex-direction: column; /* Stack the map and nearby container on smaller screens */
+    align-items: center;
+  }
+
+  .map {
+    width: 90%; /* Map takes up 90% of the width on smaller devices */
+    height: 50vh; /* Adjust map height on smaller screens */
+  }
+
+  .nearby-container {
+    overflow: none;
+    background: none;
+    box-shadow: none;
   }
 
   .spot-page-container {
