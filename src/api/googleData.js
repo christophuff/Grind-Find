@@ -1,12 +1,19 @@
-const apiKey = 'AIzaSyAnfCI55bELlwCarUVQr3LL1eOhN2GEqiE';
-
 const fetchNearbyParks = (lat, lng) =>
   new Promise((resolve, reject) => {
-    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=park&keyword=skatepark&key=${apiKey}`;
+    const url = `http://localhost:3001/api/parks?lat=${lat}&lng=${lng}`;
     fetch(url)
       .then((response) => response.json())
       .then((data) => resolve(data))
       .catch(reject);
   });
 
-export default fetchNearbyParks;
+const fetchParkDetails = (placeId) =>
+  new Promise((resolve, reject) => {
+    const url = `http://localhost:3001/api/park-details?place_id=${placeId}`;
+    fetch(url)
+      .then((res) => res.json())
+      .then(resolve)
+      .catch(reject);
+  });
+
+export { fetchNearbyParks, fetchParkDetails };

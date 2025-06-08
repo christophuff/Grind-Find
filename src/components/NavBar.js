@@ -31,11 +31,6 @@ export default function NavBar() {
         </h1>
         <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
           <li>
-            <Link className="nav-link" href="nearby-parks" onClick={closeMenu}>
-              Nearby Parks
-            </Link>
-          </li>
-          <li>
             <Link className="nav-link" href="/my-uploads" onClick={closeMenu}>
               My Uploads
             </Link>
