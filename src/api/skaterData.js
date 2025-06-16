@@ -37,16 +37,26 @@ const getSkaterByUid = (uid) =>
         Accept: 'application/json',
       },
     })
-      .then((response) => response.text())
-      .then((text) => {
-        if (!text) {
-          resolve(null); // no content, treat as not found
+      .then((res) => res.json())
+      .then((data) => {
+        const skaters = Object.entries(data || {});
+        if (skaters.length === 0) {
+          resolve(null);
         } else {
-          const data = JSON.parse(text);
-          if (Array.isArray(data)) resolve(data[0] || null);
-          else resolve(data);
+          const [firebaseKey, skaterData] = skaters[0];
+          resolve({ ...skaterData, skater_id: firebaseKey });
         }
       })
+      .catch(reject);
+  });
+
+// eslint-disable-next-line camelcase
+const getSkaterById = (skater_id) =>
+  new Promise((resolve, reject) => {
+    // eslint-disable-next-line camelcase
+    fetch(`${endpoint}/skaters/${skater_id}.json`)
+      .then((res) => res.json())
+      .then(resolve)
       .catch(reject);
   });
 
@@ -132,4 +142,76 @@ const createSkaterIfNotExists = (skater) =>
       .catch(reject); // Reject if there's an error with the `getSkaterByUid` function
   });
 
-export { getSkaters, getSkaterByUid, getSkaterId, getSingleSkater, createSkater, updateSkater, createSkaterIfNotExists };
+const checkIfUserFollowsSkater = (followerId, followedId) =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/skater_follow/${followerId}_${followedId}.json`, {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        resolve(!!data);
+      })
+      .catch(reject);
+  });
+
+const followSkater = (followerId, followedId) =>
+  new Promise((resolve, reject) => {
+    const followKey = `${followerId}_${followedId}`;
+    const payload = {
+      followerId,
+      followedId,
+      created_at: new Date().toISOString(),
+    };
+
+    fetch(`${endpoint}/skater_follow/${followKey}.json`, {
+      method: 'PUT', // 'PUT' is used to set a specific key
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => {
+        if (response.ok) {
+          resolve(true);
+        } else {
+          reject(new Error('Error following skater'));
+        }
+      })
+      .catch(() => reject(new Error('Error following skater')));
+  });
+
+const unfollowSkater = (followerId, followedId) =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/skater_follow/${followerId}_${followedId}.json`, {
+      method: 'DELETE',
+    })
+      .then((res) => {
+        if (res.ok) resolve(true);
+        else reject(new Error('Error unfollowing skater'));
+      })
+      .catch(() => reject(new Error('Error unfollowing skater')));
+  });
+
+const getFollowersOfSkater = (skaterId) =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/skater_follow.json`)
+      .then((response) => response.json())
+      .then((data) => {
+        const followers = Object.values(data || {}).filter((item) => item.followedId === skaterId);
+        resolve(followers);
+      })
+      .catch(reject);
+  });
+
+const getSkatersFollowedByUser = (userId) =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/skater_follow.json`)
+      .then((response) => response.json())
+      .then((data) => {
+        const following = Object.values(data || {}).filter((item) => item.followerId === userId);
+        resolve(following);
+      })
+      .catch(reject);
+  });
+
+export { getSkaters, getSkaterByUid, getSkaterById, getSkaterId, getSingleSkater, createSkater, updateSkater, createSkaterIfNotExists, checkIfUserFollowsSkater, followSkater, unfollowSkater, getFollowersOfSkater, getSkatersFollowedByUser };

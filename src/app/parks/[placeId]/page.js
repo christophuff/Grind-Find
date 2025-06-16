@@ -9,6 +9,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 export default function ViewPark({ params }) {
+  document.title = 'GrindFind || Park';
   const [parkDetails, setParkDetails] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { placeId } = params;

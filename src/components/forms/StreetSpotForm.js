@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { useAuth } from '../../utils/context/authContext';
 import { getSkaters } from '../../api/skaterData';
 import { createStreetSpot, updateStreetSpot } from '../../api/streetSpotData';
+import { logActivity } from '../../api/activityData';
 
 const initialState = {
   name: '',
@@ -17,7 +18,7 @@ const initialState = {
   images: [],
   latitude: '',
   longitude: '',
-  security_level: '', // NEW FIELD
+  security_level: '',
 };
 
 function StreetSpotForm({ obj = initialState }) {
@@ -123,11 +124,42 @@ function StreetSpotForm({ obj = initialState }) {
     };
 
     if (obj.firebaseKey) {
-      updateStreetSpot(payload).then(() => router.push('/my-uploads'));
+      updateStreetSpot(payload).then(() => {
+        const activity = {
+          skater_id: payload.skater_id,
+          type: 'spot_edit',
+          timestamp: new Date().toISOString(),
+          metadata: {
+            spotId: obj.firebaseKey,
+            spotName: payload.name,
+          },
+        };
+
+        logActivity(activity)
+          .then(() => console.log('Activity logged: spot_edit'))
+          .catch((err) => console.error('Activity logging failed:', err));
+
+        router.push('/my-uploads');
+      });
     } else {
       createStreetSpot(payload).then(({ name }) => {
         const patchPayload = { firebaseKey: name };
         updateStreetSpot(patchPayload).then(() => {
+          // Log activity
+          const activity = {
+            skater_id: payload.skater_id,
+            type: 'spot_upload',
+            timestamp: new Date().toISOString(),
+            metadata: {
+              spotId: name,
+              spotName: payload.name,
+            },
+          };
+
+          logActivity(activity)
+            .then(() => console.log('Activity logged: spot_upload'))
+            .catch((err) => console.error('Activity logging failed:', err));
+
           router.push('/my-uploads');
         });
       });

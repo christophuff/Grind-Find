@@ -21,6 +21,7 @@ function Signin() {
         style={{
           margin: '-100px',
         }}
+        alt="GrindFind Logo"
       />
       <h1
         style={{

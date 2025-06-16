@@ -17,6 +17,7 @@ function MyUploads() {
   }, [user]);
 
   useEffect(() => {
+    document.title = 'GrindFind || My Uploads';
     if (user) {
       getUserStreetSpots();
     }

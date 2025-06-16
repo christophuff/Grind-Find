@@ -14,4 +14,20 @@ const viewSpotDetails = (spotFirebaseKey) =>
       .catch(reject);
   });
 
-export default viewSpotDetails;
+const viewSkaterDetails = (followObjectKey, followObject, role = 'follower') =>
+  new Promise((resolve, reject) => {
+    const skaterId = role === 'follower' ? followObject.followerId : followObject.followedId;
+
+    getSingleSkater(skaterId)
+      .then((skaterData) => {
+        resolve({
+          ...followObject,
+          skaterObject: skaterData,
+          skater_id: skaterId,
+          firebaseKey: followObjectKey,
+        });
+      })
+      .catch(reject);
+  });
+
+export { viewSpotDetails, viewSkaterDetails };

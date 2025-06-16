@@ -1,0 +1,30 @@
+{
+  "activity1": {
+    "skater_id": "skater123",
+    "type": "spot_upload",
+    "timestamp": "2025-06-12T14:22:00.000Z",
+    "metadata": {
+      "spotId": "spot001",
+      "spotName": "5th Ave Ledge"
+    }
+  },
+  "activity2": {
+    "skater_id": "skater123",
+    "type": "rating",
+    "timestamp": "2025-06-12T15:00:00.000Z",
+    "metadata": {
+      "spotId": "spot001",
+      "spotName": "5th Ave Ledge",
+      "ratingValue": 4.5
+    }
+  },
+  "activity3": {
+    "skater_id": "skater123",
+    "type": "follow",
+    "timestamp": "2025-06-12T16:10:00.000Z",
+    "metadata": {
+      "followedId": "skater456",
+      "followedUsername": "grindqueen"
+    }
+  }
+}

@@ -2,19 +2,21 @@
 
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import Image from 'next/image';
 import Slider from 'react-slick';
 import { useAuth } from '@/utils/context/authContext';
 import InteractiveStarRating from '@/components/InteractiveStarRating';
+import { logActivity } from '@/api/activityData';
 import { getSingleStreetSpot, updateStreetSpot } from '../../../api/streetSpotData';
-import { getSingleSkater } from '../../../api/skaterData'; // ✅ import skater fetcher
+import { getSingleSkater, getSkaterByUid } from '../../../api/skaterData';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 export default function ViewSpot({ params }) {
   const { firebaseKey } = params;
   const [spotDetails, setSpotDetails] = useState({});
-  const [skater, setSkater] = useState(null); // ✅ new skater state
+  const [skater, setSkater] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [hasRated, setHasRated] = useState(false);
 
@@ -22,6 +24,7 @@ export default function ViewSpot({ params }) {
   const userId = user?.uid;
 
   useEffect(() => {
+    document.title = 'GrindFind || Street Spot';
     getSingleStreetSpot(firebaseKey)
       .then((data) => {
         setSpotDetails(data);
@@ -69,16 +72,32 @@ export default function ViewSpot({ params }) {
       firebaseKey,
       ratings: updatedRatings,
       rating: Math.round(average * 10) / 10,
-    })
-      .then(() => {
-        setHasRated(true);
-        setSpotDetails((prev) => ({
-          ...prev,
-          ratings: updatedRatings,
-          rating: Math.round(average * 10) / 10,
-        }));
-        alert('Thanks for your rating!');
+    }).then(() => {
+      setHasRated(true);
+      setSpotDetails((prev) => ({
+        ...prev,
+        ratings: updatedRatings,
+        rating: Math.round(average * 10) / 10,
+      }));
+      alert('Thanks for your rating!');
+    });
+    getSkaterByUid(userId)
+      .then((skaterId) => {
+        const activity = {
+          skater_id: skaterId.skater_id,
+          type: 'rating',
+          timestamp: new Date().toISOString(),
+          metadata: {
+            spotId: firebaseKey,
+            spotName: spotDetails.name,
+            ratingValue: value,
+          },
+        };
+
+        return logActivity(activity);
       })
+      .then(() => console.log('Activity logged: rating'))
+      .catch((err) => console.error('Failed to log rating activity:', err))
       .catch((err) => {
         console.error('Error saving rating:', err);
         alert('Could not save rating');
@@ -154,7 +173,16 @@ export default function ViewSpot({ params }) {
         )}
 
         <p>{spotDetails.description || ''}</p>
-        <p>Created by: {skater?.name || 'Unknown'}</p>
+        <p>
+          Created by:{' '}
+          {skater?.name ? (
+            <Link href={`/skater/${skater.skater_id}`}>
+              <span style={{ color: '#0d6efd', textDecoration: 'underline', cursor: 'pointer' }}>{skater.name}</span>
+            </Link>
+          ) : (
+            'Unknown'
+          )}
+        </p>
       </div>
     </div>
   );
