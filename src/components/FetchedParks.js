@@ -48,7 +48,7 @@ function FetchedParks({ lat, lng }) {
                 <div className="spot-location-container">
                   <h5>{park.name}</h5>
                   <StarRating rating={park.rating || 0} />
-                  <p>Location: {park.vicinity || 'Unknown'}</p>
+                  <p className="bold">{park.vicinity || 'Unknown'}</p>
                 </div>
               </div>
             </Link>

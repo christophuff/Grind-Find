@@ -23,8 +23,6 @@ function AuthProvider(props) {
           followers: [],
         };
 
-        console.log('🚀 Sending skater:', skater);
-
         // Step 1: Ensure the skater is created (if not exists)
         await createSkaterIfNotExists(skater).then((existingData) => {
           let firebaseKey;

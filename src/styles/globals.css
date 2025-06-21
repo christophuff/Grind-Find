@@ -165,6 +165,9 @@ body {
 .card-container a {
   text-decoration: none;
 }
+.bold {
+  font-weight: bold;
+}
 .spot-card-container {
   display: flex;
   align-items: center;

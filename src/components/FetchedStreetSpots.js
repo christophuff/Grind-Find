@@ -45,7 +45,7 @@ function FetchedStreetSpots({ lat, lng }) {
               <div className="spot-location-container">
                 <h5>{spot.name}</h5>
                 <StarRating rating={spot.rating || 0} />
-                <p>Location: {spot.address || 'Unknown'}</p>
+                <p className="bold">{spot.address || 'Unknown'}</p>
               </div>
             </Link>
           ))}

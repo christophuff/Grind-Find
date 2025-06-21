@@ -124,8 +124,6 @@ const createSkaterIfNotExists = (skater) =>
   new Promise((resolve, reject) => {
     getSkaterByUid(skater.uid) // Check by Firebase UID
       .then((existing) => {
-        console.log('Existing skater found:', existing);
-
         if (!existing || Object.keys(existing).length === 0) {
           // No skater found, create one
           createSkater(skater)
