@@ -3,8 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { Button, Image } from 'react-bootstrap';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { auth } from '@/utils/client';
 import { getSkaterById, getSkaterByUid, checkIfUserFollowsSkater, followSkater, unfollowSkater, getFollowersOfSkater, getSkatersFollowedByUser } from '@/api/skaterData';
 import FollowersModal from '@/components/FollowersModal';
 import FollowingModal from '@/components/FollowingModal';
@@ -14,7 +13,7 @@ import ActivityHelper from '../../../components/ActivityHelper';
 
 function SkaterProfile() {
   // eslint-disable-next-line camelcase
-  const { skater_id } = useParams(); // pulled from route: /skater/[skater_id]
+  const { skater_id } = useParams();
   const [skater, setSkater] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentSkaterId, setCurrentSkaterId] = useState(null);
@@ -25,7 +24,6 @@ function SkaterProfile() {
   const [showProfilePicModal, setShowProfilePicModal] = useState(false);
   const [activityFeed, setActivityFeed] = useState([]);
 
-  // ✅ Refresh follower/following lists
   const refreshFollowData = useCallback(() => {
     // eslint-disable-next-line camelcase
     if (!skater_id) return;
@@ -40,11 +38,10 @@ function SkaterProfile() {
     // eslint-disable-next-line camelcase
   }, [skater_id]);
 
-  // ✅ Get current user's skater_id via UID
   useEffect(() => {
     document.title = 'GrindFind || Skater';
     const getCurrentUser = async () => {
-      const uid = firebase.auth().currentUser?.uid;
+      const uid = auth.currentUser?.uid;
       if (!uid) return;
 
       const currentSkater = await getSkaterByUid(uid);
@@ -56,7 +53,6 @@ function SkaterProfile() {
     getCurrentUser();
   }, []);
 
-  // ✅ Load profile data and follow status
   useEffect(() => {
     // eslint-disable-next-line camelcase
     if (skater_id && currentSkaterId !== null) {
@@ -73,11 +69,10 @@ function SkaterProfile() {
     // eslint-disable-next-line camelcase
   }, [skater_id, currentSkaterId, refreshFollowData]);
 
-  // ✅ Toggle follow/unfollow
   const handleFollowToggle = async () => {
     // eslint-disable-next-line camelcase
     if (currentSkaterId === skater_id) {
-      alert('You can’t follow yourself.');
+      alert("You can't follow yourself.");
       return;
     }
 
@@ -92,7 +87,6 @@ function SkaterProfile() {
       setIsFollowing((prev) => !prev);
       await refreshFollowData();
       if (!isFollowing) {
-        // Only log follow, not unfollow
         const activity = {
           skater_id: currentSkaterId,
           type: 'follow',
@@ -127,7 +121,7 @@ function SkaterProfile() {
             <p>
               <a href={`mailto:${skater?.email}`}>{skater?.email}</a>
             </p>
-            <p className="text-muted fst-italic">{skater.bio || 'This skater hasn’t added a bio yet.'}</p>
+            <p className="text-muted fst-italic">{skater.bio || "This skater hasn't added a bio yet."}</p>
             <Button variant={isFollowing ? 'success' : 'primary'} onClick={handleFollowToggle}>
               {isFollowing ? 'Following' : 'Follow'}
             </Button>
@@ -181,13 +175,9 @@ function SkaterProfile() {
         </div>
       </div>
 
-      {/* Followers Modal */}
       {showFollowersModal && <FollowersModal followers={followers} onClose={() => setShowFollowersModal(false)} />}
-
-      {/* Following Modal */}
       {showFollowingModal && <FollowingModal following={following} onClose={() => setShowFollowingModal(false)} />}
 
-      {/* Modal for Enlarged Image */}
       {showProfilePicModal && (
         <div
           className="picture-modal"

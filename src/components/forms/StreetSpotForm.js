@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import firebase from 'firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
+import { storage } from '@/utils/client';
 import { useAuth } from '../../utils/context/authContext';
 import { getSkaters } from '../../api/skaterData';
 import { createStreetSpot, updateStreetSpot } from '../../api/streetSpotData';
@@ -63,8 +64,8 @@ function StreetSpotForm({ obj = initialState }) {
     const files = Array.from(e.target.files);
     const uploadPromises = files.map((file) => {
       const fileName = `${new Date().getTime()}-${file.name}`;
-      const storageRef = firebase.storage().ref(`streetSpotImages/${fileName}`);
-      return storageRef.put(file).then(() => storageRef.getDownloadURL());
+      const fileRef = ref(storage, `streetSpotImages/${fileName}`);
+      return uploadBytes(fileRef, file).then(() => getDownloadURL(fileRef));
     });
 
     Promise.all(uploadPromises)
@@ -145,7 +146,6 @@ function StreetSpotForm({ obj = initialState }) {
       createStreetSpot(payload).then(({ name }) => {
         const patchPayload = { firebaseKey: name };
         updateStreetSpot(patchPayload).then(() => {
-          // Log activity
           const activity = {
             skater_id: payload.skater_id,
             type: 'spot_upload',
@@ -170,28 +170,23 @@ function StreetSpotForm({ obj = initialState }) {
     <form onSubmit={handleSubmit} className="street-spot-form">
       <h2>{obj.firebaseKey ? 'Update' : 'Create'} Street Spot</h2>
 
-      {/* NAME INPUT */}
       <label htmlFor="name" className="form-label">
         Spot Name
       </label>
       <input type="text" id="name" name="name" placeholder="Enter a spot name" value={formInput.name} onChange={handleChange} required className="form-input" />
 
-      {/* IMAGE UPLOAD */}
       <label htmlFor="images" className="form-label">
         Spot Images
       </label>
       <input type="file" id="images" name="images" multiple onChange={handleFileChange} className="form-input" />
 
-      {/* IMAGE PREVIEWS */}
       <div className="image-previews">{formInput.images && formInput.images.length > 0 ? formInput.images.map((image, index) => <img key={image} src={image} alt={`Preview ${index}`} className="image-preview" />) : <p>No images selected</p>}</div>
 
-      {/* ADDRESS INPUT */}
       <label htmlFor="address" className="form-label">
         Spot Address
       </label>
       <input type="text" id="address" name="address" placeholder="Enter spot address" value={formInput.address} onChange={handleChange} required className="form-input" />
 
-      {/* SKATER SELECT */}
       <label htmlFor="skater_id" className="form-label">
         Skater
       </label>
@@ -206,13 +201,11 @@ function StreetSpotForm({ obj = initialState }) {
           ))}
       </select>
 
-      {/* DESCRIPTION TEXTAREA */}
       <label htmlFor="description" className="form-label">
         Description
       </label>
       <textarea id="description" name="description" placeholder="Description" value={formInput.description} onChange={handleChange} required className="form-textarea" />
 
-      {/* SECURITY LEVEL DROPDOWN */}
       <label htmlFor="security_level" className="form-label">
         Security Level
       </label>
@@ -223,7 +216,6 @@ function StreetSpotForm({ obj = initialState }) {
         <option value="Low">Low</option>
       </select>
 
-      {/* SUBMIT BUTTON */}
       <button type="submit" className="form-button">
         {obj.firebaseKey ? 'Update' : 'Create'} Street Spot
       </button>
@@ -242,7 +234,7 @@ StreetSpotForm.propTypes = {
     uid: PropTypes.string,
     latitude: PropTypes.number,
     longitude: PropTypes.number,
-    security_level: PropTypes.string, // NEW PROP TYPE
+    security_level: PropTypes.string,
   }),
 };
 

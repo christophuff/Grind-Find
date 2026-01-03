@@ -1,9 +1,9 @@
 'use client';
 
-import firebase from 'firebase';
-import 'firebase/auth';
 import React, { useState, useEffect } from 'react';
 import { Image, Button } from 'react-bootstrap';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { storage, auth } from '@/utils/client';
 import EditProfileForm from '@/components/forms/EditProfileForm';
 import { getSkaterByUid, getSkaters, updateSkater, getFollowersOfSkater, getSkatersFollowedByUser } from '@/api/skaterData';
 import { viewSkaterDetails } from '../../api/mergedData';
@@ -11,7 +11,6 @@ import FollowersModal from '../../components/FollowersModal';
 import FollowingModal from '../../components/FollowingModal';
 
 function Profile() {
-  const user = firebase.auth().currentUser;
   const [skater, setSkater] = useState(null);
   const [bio, setBio] = useState('');
   const [name, setName] = useState('');
@@ -22,6 +21,8 @@ function Profile() {
   const [following, setFollowing] = useState([]);
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
+
+  const user = auth.currentUser;
 
   useEffect(() => {
     document.title = 'GrindFind || Account';
@@ -35,7 +36,6 @@ function Profile() {
           setName(skaterData.name || '');
           setEmail(skaterData.email || '');
 
-          // ✅ Move these inside the block
           getFollowersOfSkater(skaterData.skater_id).then((follows) => {
             Promise.all(follows.map((follow) => viewSkaterDetails(null, follow, 'follower'))).then(setFollowers);
           });
@@ -84,18 +84,17 @@ function Profile() {
       return;
     }
 
-    const storageRef = firebase.storage().ref();
     const filePath = `profilePictures/${skater.skater_id}-${Date.now()}-${file.name}`;
-    const fileRef = storageRef.child(filePath);
+    const fileRef = ref(storage, filePath);
 
     try {
       if (skater.profile_picture?.includes('firebase')) {
-        const oldRef = firebase.storage().refFromURL(skater.profile_picture);
-        await oldRef.delete().catch((err) => console.warn('Old profile picture not deleted:', err.message));
+        const oldRef = ref(storage, skater.profile_picture);
+        await deleteObject(oldRef).catch((err) => console.warn('Old profile picture not deleted:', err.message));
       }
 
-      await fileRef.put(file);
-      const downloadURL = await fileRef.getDownloadURL();
+      await uploadBytes(fileRef, file);
+      const downloadURL = await getDownloadURL(fileRef);
 
       await updateSkater(skater.skater_id, { profile_picture: downloadURL });
       setSkater((prev) => ({ ...prev, profile_picture: downloadURL }));
@@ -120,9 +119,9 @@ function Profile() {
         </div>
 
         <div>
-          <h3>{skater?.name || user.displayName}</h3>
+          <h3>{skater?.name || user?.displayName}</h3>
           <p>
-            <a href={`mailto:${skater?.email || user.email}`}>{skater?.email || user.email}</a>
+            <a href={`mailto:${skater?.email || user?.email}`}>{skater?.email || user?.email}</a>
           </p>
 
           {editing ? (
@@ -168,10 +167,7 @@ function Profile() {
           )}
         </div>
       </div>
-      {/* Followers Modal */}
       {showFollowersModal && <FollowersModal followers={followers} onClose={() => setShowFollowersModal(false)} />}
-
-      {/* Following Modal */}
       {showFollowingModal && <FollowingModal following={following} onClose={() => setShowFollowingModal(false)} />}
     </div>
   );
