@@ -11,6 +11,7 @@ export default function EditStreetSpot({ params }) {
   const { firebaseKey } = params;
 
   useEffect(() => {
+    document.title = 'GrindFind || Add Spot';
     getSingleStreetSpot(firebaseKey).then(setEditItem);
   }, [firebaseKey]);
 

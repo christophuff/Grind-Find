@@ -15,6 +15,7 @@ export default function ViewPark({ params }) {
   const { placeId } = params;
 
   useEffect(() => {
+    document.title = 'GrindFind || Parks';
     fetchParkDetails(placeId)
       .then(setParkDetails)
       .catch((err) => {
