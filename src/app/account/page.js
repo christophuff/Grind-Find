@@ -10,8 +10,6 @@ import { viewSkaterDetails } from '../../api/mergedData';
 import FollowersModal from '../../components/FollowersModal';
 import FollowingModal from '../../components/FollowingModal';
 
-export const dynamic = 'force-dynamic';
-
 function Profile() {
   const user = firebase.auth().currentUser;
   const [skater, setSkater] = useState(null);
