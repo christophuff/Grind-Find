@@ -1,6 +1,8 @@
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 const fetchNearbyParks = (lat, lng) =>
   new Promise((resolve, reject) => {
-    const url = `http://localhost:3001/api/parks?lat=${lat}&lng=${lng}`;
+    const url = `${API_URL}/api/parks?lat=${lat}&lng=${lng}`;
     fetch(url)
       .then((response) => response.json())
       .then((data) => resolve(data))
@@ -9,7 +11,7 @@ const fetchNearbyParks = (lat, lng) =>
 
 const fetchParkDetails = (placeId) =>
   new Promise((resolve, reject) => {
-    const url = `http://localhost:3001/api/park-details?place_id=${placeId}`;
+    const url = `${API_URL}/api/park-details?place_id=${placeId}`;
     fetch(url)
       .then((res) => res.json())
       .then(resolve)
